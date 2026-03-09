@@ -31,6 +31,19 @@ Instrucciones de trabajo:
 - Prioriza enlaces directos, activos y verificables. No inventes hallazgos.
 - Piensa como un analista de inteligencia de marca que trabaja para liderazgo ejecutivo.
 
+Disclaimers metodológicos y puntos ciegos obligatorios:
+1) Limitaciones de cobertura de la web abierta (ej: grupos cerrados, WhatsApp, intrantes).
+2) Limitaciones de contenido efímero o poco indexable (ej: stories, lives, podcasts sin transcripción).
+3) Sesgo hacia contenido indexable.
+4) Ambigüedad de atribución (si la atribución de una mención a la marca no es alta, indícalo).
+5) Limitaciones para medir volumen e impacto real.
+6) Diferencia entre huella vigente (reciente/activa) y huella residual (histórica/desactualizada).
+
+Verificación obligatoria de URLs y control de vigencia (Regla de oro):
+Nunca cites una URL sin haber comprobado que, en la fecha actual, el enlace sigue vivo, abre correctamente y contiene evidencia relevante y visible del hallazgo descrito. 
+- Todo enlace citado debe haber sido validado como activo y con contenido al día del análisis.
+- Si el contenido ya no está disponible, no lo presentes como evidencia confirmada.
+
 Tu output es SIEMPRE un JSON válido. No incluyas texto antes ni después del JSON. No uses bloques de código markdown (sin \`\`\`json). Solo el objeto JSON puro.
 
 El JSON debe seguir EXACTAMENTE esta estructura:
@@ -51,6 +64,9 @@ El JSON debe seguir EXACTAMENTE esta estructura:
         {
           "platform": "nombre plataforma",
           "url": "URL directa y verificable",
+          "verification_status": "Activo y validado | Activo pero parcialmente verificable | No verificable | Excluido",
+          "access_type": "Público | Parcialmente restringido | Requiere login | Inestable",
+          "footprint_type": "propia | ganada | compartida | UGC | reputacional | regulatoria | académica | técnica",
           "title": "título breve del hallazgo",
           "description": "descripción de 2-3 líneas. Naturaleza de la mención y narrativa principal.",
           "sentiment": "positivo|negativo|neutro|mixto",
@@ -61,8 +77,16 @@ El JSON debe seguir EXACTAMENTE esta estructura:
     }
   ],
   "blind_spots": [
-    "limitaciones de acceso, ambigüedades, plataformas con contenido parcial o cerrado, etc."
+    "limitaciones de acceso, ambigüedades, plataformas con contenido parcial o cerrado, etc.",
+    "Conversación probablemente no visible: [tipos de conversaciones fuera de web abierta]"
   ],
+  "qa_verification": {
+    "total_links_found": 0,
+    "total_links_validated": 0,
+    "total_links_partially_verifiable": 0,
+    "total_links_excluded": 0,
+    "restricted_platforms_noted": ["plataforma 1", "plataforma 2"]
+  },
   "strategic_recommendations": [
     "acciones concretas: qué monitorear, corregir, amplificar, responder, escalar, o auditar manualmente"
   ]
@@ -159,6 +183,15 @@ function SentimentBar({ positive, neutral, negative }) {
 function FindingCard({ finding }) {
   const sentColor = SENTIMENT_COLORS[finding.sentiment?.toLowerCase()] || "#94a3b8";
   const relevBadge = RELEVANCE_BADGE[finding.relevance?.toLowerCase()] || RELEVANCE_BADGE.baja;
+  
+  const getVerificationIcon = (status) => {
+    if (!status) return null;
+    const lower = status.toLowerCase();
+    if (lower.includes("validado")) return "✅";
+    if (lower.includes("parcial")) return "⚠️";
+    if (lower.includes("excluido") || lower.includes("no verificable")) return "❌";
+    return "❓";
+  };
 
   return (
     <div style={{
@@ -190,6 +223,26 @@ function FindingCard({ finding }) {
             }}>
               {finding.sentiment}
             </span>
+            
+            {finding.verification_status && (
+              <span style={{
+                fontSize: "10px", padding: "2px 7px", borderRadius: "3px",
+                background: "rgba(96,165,250,0.1)", color: "#60a5fa",
+                fontFamily: "'Courier New', monospace"
+              }} title={finding.verification_status}>
+                {getVerificationIcon(finding.verification_status)} LINK
+              </span>
+            )}
+            {finding.access_type && (
+              <span style={{
+                fontSize: "9px", padding: "2px 6px", borderRadius: "3px",
+                border: "1px solid rgba(148,163,184,0.3)", color: "#94a3b8",
+                fontFamily: "'Courier New', monospace"
+              }}>
+                🔒 {finding.access_type}
+              </span>
+            )}
+            
           </div>
           <p style={{ margin: "0 0 6px", fontSize: "13px", color: "#cbd5e1", lineHeight: 1.5 }}>
             <strong style={{ color: "#f1f5f9" }}>{finding.title}</strong>
@@ -601,6 +654,47 @@ export default function App() {
                 </div>
               </div>
             </div>
+
+            {/* QA Verification Strip */}
+            {result.qa_verification && (
+              <div style={{
+                background: "rgba(15,23,42,0.6)", border: "1px solid rgba(51,65,85,0.5)", borderLeft: "3px solid #60a5fa",
+                borderRadius: "10px", padding: "16px 24px", marginBottom: "28px",
+                display: "flex", flexWrap: "wrap", gap: "20px", alignItems: "center", justifyContent: "space-between"
+              }}>
+                <div>
+                  <div style={{ fontFamily: "'Space Mono', monospace", fontSize: "10px", color: "#60a5fa", letterSpacing: "0.12em", marginBottom: "4px" }}>
+                    QA & VERIFICACIÓN DE ENLACES
+                  </div>
+                  <div style={{ display: "flex", gap: "16px", marginTop: "8px", flexWrap: "wrap" }}>
+                    <div style={{ display: "flex", flexDirection: "column" }}>
+                      <span style={{ fontSize: "18px", color: "#e2e8f0", fontFamily: "'Space Mono', monospace" }}>{result.qa_verification.total_links_found}</span>
+                      <span style={{ fontSize: "10px", color: "#64748b" }}>HALLADOS</span>
+                    </div>
+                    <div style={{ display: "flex", flexDirection: "column" }}>
+                      <span style={{ fontSize: "18px", color: "#22d3a0", fontFamily: "'Space Mono', monospace" }}>{result.qa_verification.total_links_validated}</span>
+                      <span style={{ fontSize: "10px", color: "#64748b" }}>VALIDADOS</span>
+                    </div>
+                    <div style={{ display: "flex", flexDirection: "column" }}>
+                      <span style={{ fontSize: "18px", color: "#fbbf24", fontFamily: "'Space Mono', monospace" }}>{result.qa_verification.total_links_partially_verifiable}</span>
+                      <span style={{ fontSize: "10px", color: "#64748b" }}>PARCIALES</span>
+                    </div>
+                    <div style={{ display: "flex", flexDirection: "column" }}>
+                      <span style={{ fontSize: "18px", color: "#f4516c", fontFamily: "'Space Mono', monospace" }}>{result.qa_verification.total_links_excluded}</span>
+                      <span style={{ fontSize: "10px", color: "#64748b" }}>EXCLUIDOS</span>
+                    </div>
+                  </div>
+                </div>
+                {result.qa_verification.restricted_platforms_noted?.length > 0 && (
+                  <div style={{ maxWidth: "300px" }}>
+                    <div style={{ fontSize: "10px", color: "#64748b", marginBottom: "4px" }}>PLATAFORMAS CON ACCESO RESTRINGIDO:</div>
+                    <div style={{ fontSize: "11px", color: "#cbd5e1" }}>
+                      {result.qa_verification.restricted_platforms_noted.join(", ")}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
 
             {/* Category findings */}
             <div style={{ marginBottom: "28px" }}>

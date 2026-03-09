@@ -159,19 +159,19 @@ function KeywordTag({ keyword, onRemove }) {
 
 function SentimentBar({ positive, neutral, negative }) {
   return (
-    <div style={{ marginTop: "8px" }}>
-      <div style={{ display: "flex", borderRadius: "4px", overflow: "hidden", height: "8px" }}>
-        <div style={{ width: `${positive}%`, background: "#22d3a0", transition: "width 1s ease" }} />
-        <div style={{ width: `${neutral}%`, background: "#475569", transition: "width 1s ease" }} />
-        <div style={{ width: `${negative}%`, background: "#f4516c", transition: "width 1s ease" }} />
+    <div style={{ marginTop: "12px" }}>
+      <div style={{ display: "flex", borderRadius: "8px", overflow: "hidden", height: "10px", background: "rgba(226,232,240,0.5)", boxShadow: "inset 0 1px 3px rgba(0,0,0,0.05)" }}>
+        <div style={{ width: `${positive}%`, background: "linear-gradient(90deg, #10b981, #34d399)", transition: "width 1s ease" }} />
+        <div style={{ width: `${neutral}%`, background: "linear-gradient(90deg, #64748b, #94a3b8)", transition: "width 1s ease" }} />
+        <div style={{ width: `${negative}%`, background: "linear-gradient(90deg, #f43f5e, #fb7185)", transition: "width 1s ease" }} />
       </div>
-      <div style={{ display: "flex", gap: "16px", marginTop: "6px", justifyContent: "space-between" }}>
+      <div style={{ display: "flex", gap: "16px", marginTop: "10px", justifyContent: "space-between" }}>
         {[
-          { label: "Positivo", value: positive, color: "#22d3a0" },
-          { label: "Neutro", value: neutral, color: "#94a3b8" },
-          { label: "Negativo", value: negative, color: "#f4516c" },
+          { label: "Positivo", value: positive, color: "#059669" },
+          { label: "Neutro", value: neutral, color: "#475569" },
+          { label: "Negativo", value: negative, color: "#e11d48" },
         ].map(s => (
-          <span key={s.label} style={{ fontSize: "11px", color: s.color, fontFamily: "'Courier New', monospace" }}>
+          <span key={s.label} style={{ fontSize: "12px", color: s.color, fontWeight: 600, fontFamily: "'Inter', sans-serif" }}>
             {s.label} {s.value}%
           </span>
         ))}
@@ -195,76 +195,81 @@ function FindingCard({ finding }) {
 
   return (
     <div style={{
-      background: "rgba(15,23,42,0.6)", border: "1px solid rgba(51,65,85,0.6)",
-      borderLeft: `3px solid ${sentColor}`, borderRadius: "6px",
-      padding: "14px 16px", marginBottom: "10px",
-      transition: "border-color 0.2s, background 0.2s"
+      background: "rgba(255, 255, 255, 0.6)", 
+      border: "1px solid rgba(255, 255, 255, 0.8)",
+      borderLeft: `4px solid ${sentColor}`, 
+      borderRadius: "16px",
+      padding: "20px", marginBottom: "16px",
+      boxShadow: "0 4px 20px rgba(0,0,0,0.03)",
+      backdropFilter: "blur(12px)",
+      WebkitBackdropFilter: "blur(12px)",
+      transition: "transform 0.2s, box-shadow 0.2s"
     }}
-      onMouseEnter={e => e.currentTarget.style.background = "rgba(30,41,59,0.8)"}
-      onMouseLeave={e => e.currentTarget.style.background = "rgba(15,23,42,0.6)"}
+      onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 8px 30px rgba(0,0,0,0.06)"; }}
+      onMouseLeave={e => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "0 4px 20px rgba(0,0,0,0.03)"; }}
     >
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "12px" }}>
         <div style={{ flex: 1 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap", marginBottom: "4px" }}>
-            <span style={{ fontSize: "13px", fontWeight: 700, color: "#e2e8f0", fontFamily: "'Courier New', monospace" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap", marginBottom: "8px" }}>
+            <span style={{ fontSize: "14px", fontWeight: 700, color: "#1e293b", fontFamily: "'Inter', sans-serif" }}>
               {finding.platform}
             </span>
             <span style={{
-              fontSize: "10px", padding: "2px 7px", borderRadius: "3px",
-              background: relevBadge.bg, color: relevBadge.color,
-              fontFamily: "'Courier New', monospace", letterSpacing: "0.05em"
+              fontSize: "11px", padding: "3px 8px", borderRadius: "100px",
+              background: relevBadge.bg.replace("0.15", "0.2"), color: relevBadge.color,
+              fontFamily: "'Inter', sans-serif", fontWeight: 700, letterSpacing: "0.02em"
             }}>
               {relevBadge.label}
             </span>
             <span style={{
-              fontSize: "10px", padding: "2px 7px", borderRadius: "3px",
+              fontSize: "11px", padding: "3px 8px", borderRadius: "100px",
               background: `${sentColor}20`, color: sentColor,
-              fontFamily: "'Courier New', monospace", textTransform: "uppercase"
+              fontFamily: "'Inter', sans-serif", fontWeight: 700, textTransform: "uppercase"
             }}>
               {finding.sentiment}
             </span>
             
             {finding.verification_status && (
               <span style={{
-                fontSize: "10px", padding: "2px 7px", borderRadius: "3px",
-                background: "rgba(96,165,250,0.1)", color: "#60a5fa",
-                fontFamily: "'Courier New', monospace"
+                fontSize: "11px", padding: "3px 8px", borderRadius: "100px",
+                background: "rgba(59,130,246,0.1)", color: "#3b82f6",
+                fontWeight: 600, fontFamily: "'Inter', sans-serif"
               }} title={finding.verification_status}>
                 {getVerificationIcon(finding.verification_status)} LINK
               </span>
             )}
             {finding.access_type && (
               <span style={{
-                fontSize: "9px", padding: "2px 6px", borderRadius: "3px",
-                border: "1px solid rgba(148,163,184,0.3)", color: "#94a3b8",
-                fontFamily: "'Courier New', monospace"
+                fontSize: "10px", padding: "3px 8px", borderRadius: "100px",
+                border: "1px solid rgba(148,163,184,0.4)", color: "#64748b",
+                fontWeight: 600, fontFamily: "'Inter', sans-serif"
               }}>
                 🔒 {finding.access_type}
               </span>
             )}
             
           </div>
-          <p style={{ margin: "0 0 6px", fontSize: "13px", color: "#cbd5e1", lineHeight: 1.5 }}>
-            <strong style={{ color: "#f1f5f9" }}>{finding.title}</strong>
+          <p style={{ margin: "0 0 8px", fontSize: "16px", color: "#334155", lineHeight: 1.4 }}>
+            <strong style={{ color: "#0f172a", fontWeight: 700 }}>{finding.title}</strong>
           </p>
-          <p style={{ margin: "0 0 8px", fontSize: "12px", color: "#94a3b8", lineHeight: 1.6 }}>
+          <p style={{ margin: "0 0 12px", fontSize: "14px", color: "#475569", lineHeight: 1.6 }}>
             {finding.description}
           </p>
           <a href={finding.url} target="_blank" rel="noopener noreferrer" style={{
-            fontSize: "11px", color: "#22d3a0", textDecoration: "none",
-            fontFamily: "'Courier New', monospace", opacity: 0.8,
-            display: "block", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap"
+            fontSize: "13px", color: "#059669", textDecoration: "none",
+            fontFamily: "'Inter', sans-serif", fontWeight: 600,
+            display: "inline-flex", alignItems: "center", gap: "4px"
           }}
-            onMouseEnter={e => e.target.style.opacity = 1}
-            onMouseLeave={e => e.target.style.opacity = 0.8}
+            onMouseEnter={e => e.target.style.textDecoration = "underline"}
+            onMouseLeave={e => e.target.style.textDecoration = "none"}
           >
-            ↗ {finding.url}
+            Ver fuente ↗
           </a>
         </div>
         {finding.date && (
           <span style={{
-            fontSize: "10px", color: "#475569", whiteSpace: "nowrap",
-            fontFamily: "'Courier New', monospace"
+            fontSize: "12px", color: "#94a3b8", whiteSpace: "nowrap",
+            fontWeight: 500, fontFamily: "'Inter', sans-serif"
           }}>{finding.date}</span>
         )}
       </div>
@@ -275,29 +280,31 @@ function FindingCard({ finding }) {
 function CategorySection({ category }) {
   const [open, setOpen] = useState(true);
   return (
-    <div style={{ marginBottom: "20px" }}>
+    <div style={{ marginBottom: "24px" }}>
       <button onClick={() => setOpen(o => !o)} style={{
-        width: "100%", display: "flex", alignItems: "center", gap: "10px",
-        background: "rgba(30,41,59,0.5)", border: "1px solid rgba(51,65,85,0.5)",
-        borderRadius: "8px", padding: "12px 16px", cursor: "pointer",
-        color: "#e2e8f0", fontSize: "14px", fontFamily: "'Courier New', monospace",
-        textAlign: "left", transition: "background 0.2s"
+        width: "100%", display: "flex", alignItems: "center", gap: "14px",
+        background: "rgba(255,255,255,0.7)", border: "1px solid rgba(255,255,255,0.9)",
+        borderRadius: "16px", padding: "16px 20px", cursor: "pointer",
+        color: "#1e293b", fontSize: "16px", fontFamily: "'Inter', sans-serif",
+        textAlign: "left", transition: "all 0.2s", boxShadow: "0 4px 15px rgba(0,0,0,0.02)",
+        backdropFilter: "blur(10px)"
       }}
-        onMouseEnter={e => e.currentTarget.style.background = "rgba(51,65,85,0.5)"}
-        onMouseLeave={e => e.currentTarget.style.background = "rgba(30,41,59,0.5)"}
+        onMouseEnter={e => { e.currentTarget.style.background = "rgba(255,255,255,0.9)"; e.currentTarget.style.boxShadow = "0 8px 25px rgba(0,0,0,0.04)"; }}
+        onMouseLeave={e => { e.currentTarget.style.background = "rgba(255,255,255,0.7)"; e.currentTarget.style.boxShadow = "0 4px 15px rgba(0,0,0,0.02)"; }}
       >
-        <span style={{ fontSize: "18px" }}>{category.category_icon}</span>
-        <span style={{ flex: 1, fontWeight: 600 }}>{category.category_name}</span>
+        <span style={{ fontSize: "24px", filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.1))" }}>{category.category_icon}</span>
+        <span style={{ flex: 1, fontWeight: 700, letterSpacing: "-0.01em" }}>{category.category_name}</span>
         <span style={{
-          fontSize: "11px", padding: "2px 8px", borderRadius: "10px",
-          background: "rgba(34,211,160,0.1)", color: "#22d3a0"
+          fontSize: "12px", padding: "4px 12px", borderRadius: "100px",
+          background: "linear-gradient(135deg, #10b981, #059669)", color: "white", fontWeight: 600,
+          boxShadow: "0 2px 8px rgba(16,185,129,0.3)"
         }}>
           {category.findings?.length || 0} hallazgos
         </span>
-        <span style={{ color: "#475569", fontSize: "12px" }}>{open ? "▲" : "▼"}</span>
+        <span style={{ color: "#94a3b8", fontSize: "12px", marginLeft: "4px" }}>{open ? "▲" : "▼"}</span>
       </button>
       {open && category.findings?.length > 0 && (
-        <div style={{ marginTop: "8px", paddingLeft: "4px" }}>
+        <div style={{ marginTop: "16px", paddingLeft: "8px", borderLeft: "2px dashed rgba(203,213,225,0.5)", marginLeft: "24px" }}>
           {category.findings.map((f, i) => <FindingCard key={i} finding={f} />)}
         </div>
       )}
@@ -423,161 +430,170 @@ export default function App() {
   return (
     <div style={{
       minHeight: "100vh",
-      background: "#080f1a",
-      color: "#e2e8f0",
-      fontFamily: "'Georgia', serif",
+      background: "linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)",
+      color: "#0f172a",
+      fontFamily: "'Inter', sans-serif",
+      position: "relative"
     }}>
+      {/* Decorative blurred blobs for background */}
+      <div style={{ position: "fixed", top: "-10%", left: "-5%", width: "40vw", height: "40vw", background: "radial-gradient(circle, rgba(16,185,129,0.15) 0%, rgba(255,255,255,0) 70%)", filter: "blur(60px)", zIndex: 0, pointerEvents: "none" }} />
+      <div style={{ position: "fixed", bottom: "-10%", right: "-5%", width: "50vw", height: "50vw", background: "radial-gradient(circle, rgba(59,130,246,0.15) 0%, rgba(255,255,255,0) 70%)", filter: "blur(80px)", zIndex: 0, pointerEvents: "none" }} />
+
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@500;700;900&display=swap');
         @keyframes scan { 0% { top: -2px; } 100% { top: 100%; } }
-        @keyframes pulse-glow { 0%,100% { box-shadow: 0 0 8px rgba(34,211,160,0.2); } 50% { box-shadow: 0 0 20px rgba(34,211,160,0.4); } }
-        @keyframes fadeInUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
-        @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+        @keyframes pulse-glow { 0%,100% { box-shadow: 0 0 15px rgba(16,185,129,0.3); transform: scale(1); } 50% { box-shadow: 0 0 25px rgba(16,185,129,0.5); transform: scale(1.05); } }
+        @keyframes fadeInUp { from { opacity:0; transform:translateY(24px); } to { opacity:1; transform:translateY(0); } }
         * { box-sizing: border-box; }
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #0f172a; }
-        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
-        input::placeholder { color: #334155; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(148,163,184,0.5); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(100,116,139,0.8); }
+        input::placeholder { color: #94a3b8; }
       `}</style>
 
       {/* Header */}
       <div style={{
-        borderBottom: "1px solid rgba(34,211,160,0.15)",
-        background: "rgba(8,15,26,0.95)",
-        backdropFilter: "blur(10px)",
+        borderBottom: "1px solid rgba(255,255,255,0.8)",
+        background: "rgba(255,255,255,0.7)",
+        backdropFilter: "blur(20px)",
+        WebkitBackdropFilter: "blur(20px)",
         padding: "0 40px",
-        position: "sticky", top: 0, zIndex: 100
+        position: "sticky", top: 0, zIndex: 100,
+        boxShadow: "0 4px 30px rgba(0,0,0,0.03)"
       }}>
-        <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "16px 0", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+        <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "16px 0", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
             <div style={{
-              width: "32px", height: "32px", borderRadius: "6px",
-              background: "rgba(34,211,160,0.1)", border: "1px solid rgba(34,211,160,0.3)",
+              width: "40px", height: "40px", borderRadius: "12px",
+              background: "linear-gradient(135deg, #10b981 0%, #059669 100%)",
               display: "flex", alignItems: "center", justifyContent: "center",
               animation: "pulse-glow 3s ease-in-out infinite"
             }}>
-              <span style={{ color: "#22d3a0", fontSize: "16px" }}>◎</span>
+              <span style={{ color: "white", fontSize: "20px", fontWeight: "900", fontFamily: "'Outfit', sans-serif" }}>R'</span>
             </div>
             <div>
-              <div style={{ fontFamily: "'Space Mono', monospace", fontSize: "15px", fontWeight: 700, color: "#f1f5f9", letterSpacing: "-0.02em" }}>
-                SIGNAL<span style={{ color: "#22d3a0" }}>TRACE</span>
+              <div style={{ fontFamily: "'Outfit', sans-serif", fontSize: "20px", fontWeight: 800, color: "#0f172a", letterSpacing: "-0.02em" }}>
+                R'EVOLUTION<span style={{ color: "#10b981" }}>LAB</span>
               </div>
-              <div style={{ fontSize: "10px", color: "#475569", fontFamily: "'Space Mono', monospace", letterSpacing: "0.1em" }}>
-                DIGITAL FOOTPRINT INTELLIGENCE
+              <div style={{ fontSize: "11px", color: "#64748b", fontWeight: 600, letterSpacing: "0.15em", textTransform: "uppercase" }}>
+                Digital Footprint Intelligence
               </div>
             </div>
           </div>
-          <div style={{ fontFamily: "'Space Mono', monospace", fontSize: "11px", color: "#22d3a0", opacity: 0.5 }}>
+          <div style={{ fontWeight: 600, fontSize: "13px", color: "#94a3b8", background: "rgba(241,245,249,0.8)", padding: "6px 12px", borderRadius: "100px", border: "1px solid rgba(226,232,240,0.8)" }}>
             {new Date().toISOString().slice(0, 10)}
           </div>
         </div>
       </div>
 
       {/* Main content */}
-      <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "48px 40px" }}>
+      <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "64px 40px", position: "relative", zIndex: 1 }}>
 
         {/* Hero */}
-        <div style={{ textAlign: "center", marginBottom: "52px" }}>
+        <div style={{ textAlign: "center", marginBottom: "64px" }}>
           <h1 style={{
-            fontFamily: "'Libre Baskerville', serif", fontStyle: "italic",
-            fontSize: "clamp(28px, 4vw, 46px)", fontWeight: 400,
-            color: "#f1f5f9", margin: "0 0 12px", lineHeight: 1.2,
-            letterSpacing: "-0.02em"
+            fontFamily: "'Outfit', sans-serif",
+            fontSize: "clamp(36px, 5vw, 64px)", fontWeight: 900,
+            color: "#0f172a", margin: "0 0 16px", lineHeight: 1.1,
+            letterSpacing: "-0.03em"
           }}>
-            Inteligencia de Huella Digital
+            Brand <span style={{ background: "linear-gradient(righ, #10b981, #3b82f6)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>Intelligence</span> Hub
           </h1>
-          <p style={{ color: "#64748b", fontFamily: "'Space Mono', monospace", fontSize: "12px", letterSpacing: "0.08em" }}>
-            INVESTIGACION PROFUNDA · ANALISIS DE SENTIMIENTO · DASHBOARD EJECUTIVO
+          <p style={{ color: "#475569", fontSize: "18px", fontWeight: 500, maxWidth: "600px", margin: "0 auto", lineHeight: 1.6 }}>
+            Motor de investigación profunda y análisis de sentimiento. <br/>Obtén una radiografía ejecutiva real para tu marca.
           </p>
         </div>
 
         {/* Input form */}
         <div style={{
-          background: "rgba(15,23,42,0.7)", border: "1px solid rgba(51,65,85,0.6)",
-          borderRadius: "12px", padding: "32px", marginBottom: "40px",
-          position: "relative", overflow: "hidden"
+          background: "rgba(255,255,255,0.7)", border: "1px solid rgba(255,255,255,0.9)",
+          borderRadius: "24px", padding: "40px", marginBottom: "48px",
+          position: "relative", overflow: "hidden",
+          boxShadow: "0 20px 40px rgba(0,0,0,0.04)",
+          backdropFilter: "blur(20px)"
         }}>
           {loading && <ScanLine />}
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "20px", marginBottom: "20px" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "24px", marginBottom: "24px" }}>
             {/* URL */}
             <div>
-              <label style={{ display: "block", fontFamily: "'Space Mono', monospace", fontSize: "11px", color: "#22d3a0", letterSpacing: "0.1em", marginBottom: "8px" }}>
+              <label style={{ display: "block", fontSize: "12px", fontWeight: 700, color: "#475569", letterSpacing: "0.05em", marginBottom: "10px", textTransform: "uppercase" }}>
                 URL OFICIAL DE LA MARCA *
               </label>
               <input
                 value={url}
                 onChange={e => setUrl(e.target.value)}
-                placeholder="https://www.ejemplo.com"
+                placeholder="https://www.siglo21.edu.ar"
                 style={{
-                  width: "100%", background: "rgba(8,15,26,0.8)",
-                  border: "1px solid rgba(51,65,85,0.8)", borderRadius: "6px",
-                  padding: "10px 14px", color: "#e2e8f0", fontSize: "13px",
-                  fontFamily: "'Space Mono', monospace", outline: "none",
-                  transition: "border-color 0.2s"
+                  width: "100%", background: "rgba(255,255,255,0.9)",
+                  border: "2px solid rgba(226,232,240,0.8)", borderRadius: "12px",
+                  padding: "14px 18px", color: "#0f172a", fontSize: "16px",
+                  fontWeight: 500, outline: "none", boxShadow: "inset 0 2px 4px rgba(0,0,0,0.02)",
+                  transition: "all 0.2s"
                 }}
-                onFocus={e => e.target.style.borderColor = "rgba(34,211,160,0.5)"}
-                onBlur={e => e.target.style.borderColor = "rgba(51,65,85,0.8)"}
+                onFocus={e => { e.target.style.borderColor = "#10b981"; e.target.style.boxShadow = "0 0 0 4px rgba(16,185,129,0.1)"; }}
+                onBlur={e => { e.target.style.borderColor = "rgba(226,232,240,0.8)"; e.target.style.boxShadow = "inset 0 2px 4px rgba(0,0,0,0.02)"; }}
               />
             </div>
             {/* Brand name */}
             <div>
-              <label style={{ display: "block", fontFamily: "'Space Mono', monospace", fontSize: "11px", color: "#64748b", letterSpacing: "0.1em", marginBottom: "8px" }}>
-                NOMBRE DE MARCA (OPCIONAL)
+              <label style={{ display: "block", fontSize: "12px", fontWeight: 700, color: "#475569", letterSpacing: "0.05em", marginBottom: "10px", textTransform: "uppercase" }}>
+                NOMBRE DE MARCA / LEGAL
               </label>
               <input
                 value={brandName}
                 onChange={e => setBrandName(e.target.value)}
-                placeholder="Ej: Acme Corp (si difiere de la URL)"
+                placeholder="Ej: Universidad Siglo 21"
                 style={{
-                  width: "100%", background: "rgba(8,15,26,0.8)",
-                  border: "1px solid rgba(51,65,85,0.8)", borderRadius: "6px",
-                  padding: "10px 14px", color: "#e2e8f0", fontSize: "13px",
-                  fontFamily: "'Space Mono', monospace", outline: "none",
-                  transition: "border-color 0.2s"
+                  width: "100%", background: "rgba(255,255,255,0.9)",
+                  border: "2px solid rgba(226,232,240,0.8)", borderRadius: "12px",
+                  padding: "14px 18px", color: "#0f172a", fontSize: "16px",
+                  fontWeight: 500, outline: "none", boxShadow: "inset 0 2px 4px rgba(0,0,0,0.02)",
+                  transition: "all 0.2s"
                 }}
-                onFocus={e => e.target.style.borderColor = "rgba(34,211,160,0.5)"}
-                onBlur={e => e.target.style.borderColor = "rgba(51,65,85,0.8)"}
+                onFocus={e => { e.target.style.borderColor = "#10b981"; e.target.style.boxShadow = "0 0 0 4px rgba(16,185,129,0.1)"; }}
+                onBlur={e => { e.target.style.borderColor = "rgba(226,232,240,0.8)"; e.target.style.boxShadow = "inset 0 2px 4px rgba(0,0,0,0.02)"; }}
               />
             </div>
           </div>
 
           {/* Keywords */}
-          <div style={{ marginBottom: "24px" }}>
-            <label style={{ display: "block", fontFamily: "'Space Mono', monospace", fontSize: "11px", color: "#64748b", letterSpacing: "0.1em", marginBottom: "8px" }}>
-              KEYWORDS DE BUSQUEDA ADICIONALES
-              <span style={{ color: "#334155", marginLeft: "8px" }}>/ presiona Enter o coma para agregar</span>
+          <div style={{ marginBottom: "32px" }}>
+            <label style={{ display: "block", fontSize: "12px", fontWeight: 700, color: "#475569", letterSpacing: "0.05em", marginBottom: "10px", textTransform: "uppercase" }}>
+              VARIANTES O KEYWORDS CLAVE
+              <span style={{ color: "#94a3b8", marginLeft: "8px", fontWeight: 400, textTransform: "none" }}>/ enter o coma para agregar</span>
             </label>
-            <div style={{ display: "flex", gap: "8px", marginBottom: "10px" }}>
+            <div style={{ display: "flex", gap: "12px", marginBottom: "12px" }}>
               <input
                 value={keywordInput}
                 onChange={e => setKeywordInput(e.target.value)}
                 onKeyDown={handleKeyDown}
-                placeholder="Ej: siglo21, universidad siglo veintiuno, US21..."
+                placeholder="Ej: Siglo21, UES21..."
                 style={{
-                  flex: 1, background: "rgba(8,15,26,0.8)",
-                  border: "1px solid rgba(51,65,85,0.8)", borderRadius: "6px",
-                  padding: "10px 14px", color: "#e2e8f0", fontSize: "13px",
-                  fontFamily: "'Space Mono', monospace", outline: "none",
-                  transition: "border-color 0.2s"
+                  flex: 1, background: "rgba(255,255,255,0.9)",
+                  border: "2px solid rgba(226,232,240,0.8)", borderRadius: "12px",
+                  padding: "14px 18px", color: "#0f172a", fontSize: "16px",
+                  fontWeight: 500, outline: "none", boxShadow: "inset 0 2px 4px rgba(0,0,0,0.02)",
+                  transition: "all 0.2s"
                 }}
-                onFocus={e => e.target.style.borderColor = "rgba(34,211,160,0.5)"}
-                onBlur={e => e.target.style.borderColor = "rgba(51,65,85,0.8)"}
+                onFocus={e => { e.target.style.borderColor = "#10b981"; e.target.style.boxShadow = "0 0 0 4px rgba(16,185,129,0.1)"; }}
+                onBlur={e => { e.target.style.borderColor = "rgba(226,232,240,0.8)"; e.target.style.boxShadow = "inset 0 2px 4px rgba(0,0,0,0.02)"; }}
               />
               <button onClick={addKeyword} style={{
-                background: "rgba(34,211,160,0.1)", border: "1px solid rgba(34,211,160,0.3)",
-                borderRadius: "6px", padding: "10px 18px", color: "#22d3a0",
-                fontFamily: "'Space Mono', monospace", fontSize: "12px", cursor: "pointer",
-                transition: "background 0.2s"
+                background: "#f1f5f9", border: "2px solid #e2e8f0",
+                borderRadius: "12px", padding: "0 24px", color: "#475569",
+                fontWeight: 700, fontSize: "14px", cursor: "pointer",
+                transition: "all 0.2s"
               }}
-                onMouseEnter={e => e.currentTarget.style.background = "rgba(34,211,160,0.2)"}
-                onMouseLeave={e => e.currentTarget.style.background = "rgba(34,211,160,0.1)"}
+                onMouseEnter={e => { e.currentTarget.style.background = "#e2e8f0"; e.currentTarget.style.color = "#0f172a"; }}
+                onMouseLeave={e => { e.currentTarget.style.background = "#f1f5f9"; e.currentTarget.style.color = "#475569"; }}
               >
-                + ADD
+                Añadir
               </button>
             </div>
             {keywords.length > 0 && (
-              <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
                 {keywords.map((kw, i) => (
                   <KeywordTag key={i} keyword={kw} onRemove={() => setKeywords(prev => prev.filter((_, j) => j !== i))} />
                 ))}
@@ -588,59 +604,64 @@ export default function App() {
           {/* Run button */}
           <button
             onClick={runResearch}
-            disabled={loading || !url.trim()}
+            disabled={loading || !url}
             style={{
-              width: "100%", padding: "14px", borderRadius: "8px",
-              background: loading || !url.trim()
-                ? "rgba(34,211,160,0.05)"
-                : "rgba(34,211,160,0.12)",
-              border: `1px solid ${loading || !url.trim() ? "rgba(34,211,160,0.15)" : "rgba(34,211,160,0.4)"}`,
-              color: loading || !url.trim() ? "#334155" : "#22d3a0",
-              fontFamily: "'Space Mono', monospace", fontSize: "13px",
-              fontWeight: 700, letterSpacing: "0.1em", cursor: loading || !url.trim() ? "not-allowed" : "pointer",
-              transition: "all 0.2s", position: "relative"
+              width: "100%", padding: "18px", borderRadius: "16px",
+              background: loading || !url ? "#e2e8f0" : "linear-gradient(135deg, #10b981 0%, #059669 100%)",
+              color: loading || !url ? "#94a3b8" : "white",
+              fontSize: "16px", fontWeight: 800, fontFamily: "'Inter', sans-serif",
+              border: "none", cursor: loading || !url ? "not-allowed" : "pointer",
+              transition: "all 0.3s",
+              boxShadow: loading || !url ? "none" : "0 10px 25px rgba(16,185,129,0.3)",
+              letterSpacing: "0.05em", textTransform: "uppercase"
             }}
-            onMouseEnter={e => { if (!loading && url.trim()) e.currentTarget.style.background = "rgba(34,211,160,0.2)"; }}
-            onMouseLeave={e => { if (!loading && url.trim()) e.currentTarget.style.background = "rgba(34,211,160,0.12)"; }}
+            onMouseEnter={e => { if (!loading && url) { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 15px 35px rgba(16,185,129,0.4)"; } }}
+            onMouseLeave={e => { if (!loading && url) { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "0 10px 25px rgba(16,185,129,0.3)"; } }}
           >
-            {loading ? (
-              <span>{statusMsg}{loadingDots}</span>
-            ) : (
-              "◎ INICIAR RASTREO DE HUELLA DIGITAL"
-            )}
+            {loading ? "PROCESANDO HUELLA DIGITAL..." : "EJECUTAR ANÁLISIS PROFUNDO"}
           </button>
         </div>
 
-        {/* Error */}
+        {/* Error state */}
         {error && (
           <div style={{
-            background: "rgba(244,81,108,0.08)", border: "1px solid rgba(244,81,108,0.3)",
-            borderRadius: "8px", padding: "16px 20px", marginBottom: "32px",
-            fontFamily: "'Space Mono', monospace", fontSize: "12px", color: "#f4516c"
+            background: "rgba(254,226,226,0.8)", border: "1px solid #fca5a5", borderLeft: "4px solid #ef4444",
+            color: "#b91c1c", padding: "20px", borderRadius: "12px", marginBottom: "40px",
+            fontFamily: "'Inter', sans-serif", fontSize: "15px", fontWeight: 500,
+            boxShadow: "0 4px 15px rgba(220,38,38,0.05)"
           }}>
-            ERROR: {error}
+            <strong style={{ display: "block", marginBottom: "8px", fontSize: "16px", fontWeight: 800 }}>Error de Sistema</strong>
+            {error}
           </div>
         )}
 
-        {/* Results */}
+        {/* Results dashboard */}
         {result && (
-          <div ref={resultsRef} style={{ animation: "fadeInUp 0.5s ease" }}>
+          <div ref={resultsRef} style={{ animation: "fadeInUp 0.6s ease-out" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "32px", borderBottom: "2px solid rgba(226,232,240,0.8)", paddingBottom: "16px" }}>
+              <span style={{ fontSize: "24px" }}>📊</span>
+              <h2 style={{ margin: 0, fontFamily: "'Outfit', sans-serif", fontSize: "28px", fontWeight: 800, color: "#0f172a", letterSpacing: "-0.02em" }}>
+                Digital Intelligence Report
+              </h2>
+            </div>
+
             {/* Executive summary strip */}
             <div style={{
-              background: "rgba(34,211,160,0.05)", border: "1px solid rgba(34,211,160,0.2)",
-              borderRadius: "10px", padding: "24px 28px", marginBottom: "28px"
+              background: "rgba(255,255,255,0.8)", border: "1px solid rgba(226,232,240,0.9)",
+              borderRadius: "20px", padding: "32px", marginBottom: "40px",
+              boxShadow: "0 10px 30px rgba(0,0,0,0.03)", backdropFilter: "blur(20px)"
             }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: "16px" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: "32px" }}>
                 <div style={{ flex: 1, minWidth: "280px" }}>
-                  <div style={{ fontFamily: "'Space Mono', monospace", fontSize: "10px", color: "#22d3a0", letterSpacing: "0.12em", marginBottom: "8px" }}>
-                    RESUMEN EJECUTIVO · {result.brand?.toUpperCase()}
+                  <div style={{ fontFamily: "'Inter', sans-serif", fontSize: "12px", fontWeight: 800, color: "#10b981", letterSpacing: "0.1em", marginBottom: "12px", textTransform: "uppercase" }}>
+                    RESUMEN EJECUTIVO · {result.brand}
                   </div>
-                  <p style={{ margin: 0, fontSize: "14px", color: "#cbd5e1", lineHeight: 1.7, fontFamily: "'Libre Baskerville', serif" }}>
+                  <p style={{ margin: 0, fontSize: "18px", color: "#334155", lineHeight: 1.6, fontWeight: 500 }}>
                     {result.executive_summary}
                   </p>
                 </div>
-                <div style={{ minWidth: "200px" }}>
-                  <div style={{ fontFamily: "'Space Mono', monospace", fontSize: "10px", color: "#475569", letterSpacing: "0.1em", marginBottom: "8px" }}>
+                <div style={{ minWidth: "250px", background: "rgba(248,250,252,0.8)", padding: "20px", borderRadius: "16px", border: "1px solid rgba(226,232,240,0.8)" }}>
+                  <div style={{ fontFamily: "'Inter', sans-serif", fontSize: "11px", fontWeight: 800, color: "#475569", letterSpacing: "0.1em", marginBottom: "12px", textTransform: "uppercase" }}>
                     SENTIMIENTO GLOBAL
                   </div>
                   <SentimentBar
@@ -648,7 +669,7 @@ export default function App() {
                     neutral={result.sentiment_overview?.neutral || 0}
                     negative={result.sentiment_overview?.negative || 0}
                   />
-                  <div style={{ marginTop: "12px", fontFamily: "'Space Mono', monospace", fontSize: "11px", color: "#475569" }}>
+                  <div style={{ marginTop: "16px", fontFamily: "'Inter', sans-serif", fontSize: "13px", fontWeight: 600, color: "#64748b", textAlign: "center" }}>
                     {totalFindings} hallazgos · {result.categories?.length || 0} categorías
                   </div>
                 </div>
@@ -658,37 +679,38 @@ export default function App() {
             {/* QA Verification Strip */}
             {result.qa_verification && (
               <div style={{
-                background: "rgba(15,23,42,0.6)", border: "1px solid rgba(51,65,85,0.5)", borderLeft: "3px solid #60a5fa",
-                borderRadius: "10px", padding: "16px 24px", marginBottom: "28px",
-                display: "flex", flexWrap: "wrap", gap: "20px", alignItems: "center", justifyContent: "space-between"
+                background: "rgba(255,255,255,0.8)", border: "1px solid rgba(226,232,240,0.9)", borderLeft: "6px solid #3b82f6",
+                borderRadius: "20px", padding: "24px 32px", marginBottom: "40px",
+                display: "flex", flexWrap: "wrap", gap: "32px", alignItems: "center", justifyContent: "space-between",
+                boxShadow: "0 10px 25px rgba(0,0,0,0.02)"
               }}>
                 <div>
-                  <div style={{ fontFamily: "'Space Mono', monospace", fontSize: "10px", color: "#60a5fa", letterSpacing: "0.12em", marginBottom: "4px" }}>
+                  <div style={{ fontFamily: "'Inter', sans-serif", fontSize: "11px", fontWeight: 800, color: "#3b82f6", letterSpacing: "0.1em", marginBottom: "12px", textTransform: "uppercase" }}>
                     QA & VERIFICACIÓN DE ENLACES
                   </div>
-                  <div style={{ display: "flex", gap: "16px", marginTop: "8px", flexWrap: "wrap" }}>
-                    <div style={{ display: "flex", flexDirection: "column" }}>
-                      <span style={{ fontSize: "18px", color: "#e2e8f0", fontFamily: "'Space Mono', monospace" }}>{result.qa_verification.total_links_found}</span>
-                      <span style={{ fontSize: "10px", color: "#64748b" }}>HALLADOS</span>
+                  <div style={{ display: "flex", gap: "24px", flexWrap: "wrap" }}>
+                    <div style={{ display: "flex", flexDirection: "column", background: "rgba(241,245,249,0.8)", padding: "12px 20px", borderRadius: "12px" }}>
+                      <span style={{ fontSize: "28px", fontWeight: 800, color: "#0f172a", fontFamily: "'Outfit', sans-serif" }}>{result.qa_verification.total_links_found}</span>
+                      <span style={{ fontSize: "11px", fontWeight: 600, color: "#64748b" }}>HALLADOS</span>
                     </div>
-                    <div style={{ display: "flex", flexDirection: "column" }}>
-                      <span style={{ fontSize: "18px", color: "#22d3a0", fontFamily: "'Space Mono', monospace" }}>{result.qa_verification.total_links_validated}</span>
-                      <span style={{ fontSize: "10px", color: "#64748b" }}>VALIDADOS</span>
+                    <div style={{ display: "flex", flexDirection: "column", background: "rgba(16,185,129,0.1)", padding: "12px 20px", borderRadius: "12px" }}>
+                      <span style={{ fontSize: "28px", fontWeight: 800, color: "#059669", fontFamily: "'Outfit', sans-serif" }}>{result.qa_verification.total_links_validated}</span>
+                      <span style={{ fontSize: "11px", fontWeight: 600, color: "#059669" }}>VALIDADOS</span>
                     </div>
-                    <div style={{ display: "flex", flexDirection: "column" }}>
-                      <span style={{ fontSize: "18px", color: "#fbbf24", fontFamily: "'Space Mono', monospace" }}>{result.qa_verification.total_links_partially_verifiable}</span>
-                      <span style={{ fontSize: "10px", color: "#64748b" }}>PARCIALES</span>
+                    <div style={{ display: "flex", flexDirection: "column", background: "rgba(245,158,11,0.1)", padding: "12px 20px", borderRadius: "12px" }}>
+                      <span style={{ fontSize: "28px", fontWeight: 800, color: "#d97706", fontFamily: "'Outfit', sans-serif" }}>{result.qa_verification.total_links_partially_verifiable}</span>
+                      <span style={{ fontSize: "11px", fontWeight: 600, color: "#d97706" }}>PARCIALES</span>
                     </div>
-                    <div style={{ display: "flex", flexDirection: "column" }}>
-                      <span style={{ fontSize: "18px", color: "#f4516c", fontFamily: "'Space Mono', monospace" }}>{result.qa_verification.total_links_excluded}</span>
-                      <span style={{ fontSize: "10px", color: "#64748b" }}>EXCLUIDOS</span>
+                    <div style={{ display: "flex", flexDirection: "column", background: "rgba(225,29,72,0.1)", padding: "12px 20px", borderRadius: "12px" }}>
+                      <span style={{ fontSize: "28px", fontWeight: 800, color: "#e11d48", fontFamily: "'Outfit', sans-serif" }}>{result.qa_verification.total_links_excluded}</span>
+                      <span style={{ fontSize: "11px", fontWeight: 600, color: "#e11d48" }}>EXCLUIDOS</span>
                     </div>
                   </div>
                 </div>
                 {result.qa_verification.restricted_platforms_noted?.length > 0 && (
-                  <div style={{ maxWidth: "300px" }}>
-                    <div style={{ fontSize: "10px", color: "#64748b", marginBottom: "4px" }}>PLATAFORMAS CON ACCESO RESTRINGIDO:</div>
-                    <div style={{ fontSize: "11px", color: "#cbd5e1" }}>
+                  <div style={{ maxWidth: "350px", background: "rgba(248,250,252,0.8)", padding: "16px 20px", borderRadius: "12px", border: "1px dashed rgba(203,213,225,0.8)" }}>
+                    <div style={{ fontSize: "11px", fontWeight: 700, color: "#64748b", marginBottom: "8px" }}>PLATAFORMAS CON ACCESO RESTRINGIDO:</div>
+                    <div style={{ fontSize: "13px", color: "#334155", fontWeight: 500 }}>
                       {result.qa_verification.restricted_platforms_noted.join(", ")}
                     </div>
                   </div>
@@ -697,60 +719,81 @@ export default function App() {
             )}
 
             {/* Category findings */}
-            <div style={{ marginBottom: "28px" }}>
-              <div style={{ fontFamily: "'Space Mono', monospace", fontSize: "11px", color: "#475569", letterSpacing: "0.1em", marginBottom: "16px" }}>
-                ── HALLAZGOS POR CATEGORIA
+            <div style={{ marginBottom: "40px" }}>
+              <div style={{ fontFamily: "'Inter', sans-serif", fontSize: "14px", fontWeight: 800, color: "#1e293b", letterSpacing: "0.05em", marginBottom: "20px", display: "flex", alignItems: "center", gap: "12px" }}>
+                <span style={{ width: "24px", height: "2px", background: "#cbd5e1" }}></span>
+                DESGLOSE DE SUPERFICIES
+                <span style={{ flex: 1, height: "2px", background: "linear-gradient(90deg, #cbd5e1, transparent)" }}></span>
               </div>
               {result.categories?.map((cat, i) => (
                 <CategorySection key={i} category={cat} />
               ))}
             </div>
 
-            {/* Recommendations + Blind spots */}
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "20px" }}>
+            {/* Strategic Insights */}
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "24px" }}>
+              {/* Recommendations */}
               <div style={{
-                background: "rgba(15,23,42,0.6)", border: "1px solid rgba(51,65,85,0.5)",
-                borderRadius: "10px", padding: "20px 24px"
+                background: "rgba(255,255,255,0.8)", border: "1px solid rgba(226,232,240,0.9)",
+                borderRadius: "20px", padding: "32px",
+                boxShadow: "0 10px 30px rgba(0,0,0,0.03)", backdropFilter: "blur(20px)"
               }}>
-                <div style={{ fontFamily: "'Space Mono', monospace", fontSize: "10px", color: "#22d3a0", letterSpacing: "0.12em", marginBottom: "14px" }}>
-                  RECOMENDACIONES ESTRATEGICAS
+                <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "20px" }}>
+                  <span style={{ fontSize: "20px" }}>💡</span>
+                  <h3 style={{ margin: 0, fontFamily: "'Outfit', sans-serif", fontSize: "20px", fontWeight: 800, color: "#0f172a" }}>Oportunidades Estratégicas</h3>
                 </div>
-                {result.strategic_recommendations?.map((r, i) => (
-                  <div key={i} style={{ display: "flex", gap: "10px", marginBottom: "10px" }}>
-                    <span style={{ color: "#22d3a0", fontFamily: "'Space Mono', monospace", fontSize: "12px", marginTop: "1px", flexShrink: 0 }}>
-                      {String(i + 1).padStart(2, "0")}
-                    </span>
-                    <p style={{ margin: 0, fontSize: "13px", color: "#94a3b8", lineHeight: 1.6 }}>{r}</p>
-                  </div>
-                ))}
+                <ul style={{ margin: 0, padding: 0, listStyle: "none" }}>
+                  {result.strategic_recommendations?.map((rec, i) => (
+                    <li key={i} style={{
+                      position: "relative", paddingLeft: "24px", marginBottom: "16px",
+                      fontSize: "15px", color: "#334155", lineHeight: 1.5, fontWeight: 500
+                    }}>
+                      <span style={{ position: "absolute", left: 0, top: "2px", color: "#10b981", fontSize: "16px" }}>→</span>
+                      {rec}
+                    </li>
+                  ))}
+                </ul>
               </div>
 
+              {/* Blind spots */}
               <div style={{
-                background: "rgba(15,23,42,0.6)", border: "1px solid rgba(51,65,85,0.5)",
-                borderRadius: "10px", padding: "20px 24px"
+                background: "rgba(255,255,255,0.8)", border: "1px solid rgba(226,232,240,0.9)", borderTop: "4px solid #f59e0b",
+                borderRadius: "20px", padding: "32px",
+                boxShadow: "0 10px 30px rgba(0,0,0,0.03)", backdropFilter: "blur(20px)"
               }}>
-                <div style={{ fontFamily: "'Space Mono', monospace", fontSize: "10px", color: "#fbbf24", letterSpacing: "0.12em", marginBottom: "14px" }}>
-                  BLIND SPOTS & CAVEATS
+                <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "20px" }}>
+                  <span style={{ fontSize: "20px" }}>⚠️</span>
+                  <h3 style={{ margin: 0, fontFamily: "'Outfit', sans-serif", fontSize: "20px", fontWeight: 800, color: "#0f172a" }}>Puntos Ciegos & Riesgos</h3>
                 </div>
-                {result.blind_spots?.map((b, i) => (
-                  <div key={i} style={{ display: "flex", gap: "10px", marginBottom: "10px" }}>
-                    <span style={{ color: "#fbbf24", fontSize: "12px", marginTop: "1px", flexShrink: 0 }}>⚠</span>
-                    <p style={{ margin: 0, fontSize: "13px", color: "#94a3b8", lineHeight: 1.6 }}>{b}</p>
-                  </div>
-                ))}
+                <ul style={{ margin: 0, paddingLeft: "20px", color: "#475569", fontSize: "14px", lineHeight: 1.6 }}>
+                  {result.blind_spots?.map((bs, i) => (
+                    <li key={i} style={{ marginBottom: "12px", fontWeight: 500 }}>{bs}</li>
+                  ))}
+                </ul>
               </div>
             </div>
-
+            
             <div style={{
               marginTop: "24px", padding: "12px", textAlign: "center",
               fontFamily: "'Space Mono', monospace", fontSize: "10px",
               color: "#1e293b", borderTop: "1px solid rgba(30,41,59,0.5)"
             }}>
-              GENERADO POR SIGNALTRACE · {result.analysis_date} · POWERED BY GEMINI AI
+              GENERADO POR R'EVOLUTION LAB · {result.analysis_date} · POWERED BY GEMINI AI
             </div>
           </div>
         )}
       </div>
+
+      {/* Footer */}
+      <footer style={{
+        textAlign: "center", padding: "40px", color: "#94a3b8", fontSize: "12px",
+        fontFamily: "'Inter', sans-serif", fontWeight: 600, borderTop: "1px solid rgba(226,232,240,0.8)",
+        background: "rgba(255,255,255,0.5)"
+      }}>
+        R'EVOLUTION<span style={{ color: "#10b981" }}>LAB</span> · BRAND INTELLIGENCE ENGINE<br/>
+        <span style={{ opacity: 0.6 }}>POWERED BY GEMINI AI</span>
+      </footer>
+
     </div>
   );
 }

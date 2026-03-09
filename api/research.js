@@ -22,9 +22,6 @@ export default async function handler(req, res) {
       body: JSON.stringify({
         systemInstruction: body.systemInstruction,
         contents: body.contents,
-        generationConfig: {
-          responseMimeType: "application/json",
-        },
         tools: [
           {
             googleSearch: {}

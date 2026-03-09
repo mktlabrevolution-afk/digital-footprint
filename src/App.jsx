@@ -257,9 +257,10 @@ Debes identificar, listar y verificar todos los canales oficiales de la marca, i
 Para cada canal oficial identificado, debes:
 1. verificar que el enlace esté activo,
 2. confirmar que el canal pertenece realmente a la marca,
-3. indicar si el canal está activo, inactivo, desactualizado, duplicado o ambiguo,
-4. detectar inconsistencias de naming, branding o governance,
-5. señalar si existe fragmentación entre canales oficiales.
+3. verificar OBLIGATORIAMENTE que el link oficial se encuentre directamente embebido/vinculado dentro de la home del [URL_OFICIAL] que te pase el usuario. No mezcles ni deduzcas links externos como oficiales si no están explícitamente listados allí.
+4. indicar si el canal está activo, inactivo, desactualizado, duplicado o ambiguo,
+5. detectar inconsistencias de naming, branding o governance,
+6. señalar si existe fragmentación entre canales oficiales.
 
 Búsqueda por variantes:
 Busca con la marca exacta y también con:
@@ -631,8 +632,9 @@ VARIABLES DE BÚSQUEDA Y CONTEXTO:
 INSTRUCCIONES ESPECÍFICAS:
 1. Usa el nombre de la marca, la URL oficial, y las palabras clave adicionales o variantes para buscar en profundidad las categorías requeridas por el marco estratégico.
 2. Para el análisis de Reddit, es OBLIGATORIO realizar un crawling/búsqueda profunda de hilos que contengan EXACTAMENTE la palabra definida en [NOMBRE_DE_MARCA].
-3. Extrae hallazgos y organizalos basándote con máxima rigurosidad en las reglas de calidad y verificación de links.
-4. Completa TODO el análisis y genera la radiografía ejecutiva.
+3. Para el mapeo de "Canales Oficiales", es ESTRICTAMENTE OBLIGATORIO validar que los mismos estén embebidos/linkeados en el home de la [URL_OFICIAL] provista. No incluyas links de redes sociales u otros dominios que encuentres por fuera si no nacen del sitio oficial primario.
+4. Extrae hallazgos y organizalos basándote con máxima rigurosidad en las reglas de calidad y verificación de links.
+5. Completa TODO el análisis y genera la radiografía ejecutiva.
 
 Devuelve únicamente el JSON válido estructurado como se solicitó.`;
 }

@@ -988,14 +988,6 @@ export default function App() {
       }}>
         <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "16px 0", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-            <div style={{
-              width: "40px", height: "40px", borderRadius: "12px",
-              background: "linear-gradient(135deg, #10b981 0%, #059669 100%)",
-              display: "flex", alignItems: "center", justifyContent: "center",
-              animation: "pulse-glow 3s ease-in-out infinite"
-            }}>
-              <span style={{ color: "white", fontSize: "20px", fontWeight: "900", fontFamily: "'Outfit', sans-serif" }}>R'</span>
-            </div>
             <div>
               <div style={{ fontFamily: "'Outfit', sans-serif", fontSize: "20px", fontWeight: 800, color: "#0f172a", letterSpacing: "-0.02em" }}>
                 R'EVOLUTION<span style={{ color: "#10b981" }}>LAB</span>
@@ -1022,7 +1014,7 @@ export default function App() {
             color: "#0f172a", margin: "0 0 16px", lineHeight: 1.1,
             letterSpacing: "-0.03em"
           }}>
-            Brand <span style={{ background: "linear-gradient(righ, #10b981, #3b82f6)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>Intelligence</span> Hub
+            Digital <span style={{ background: "linear-gradient(to right, #10b981, #3b82f6)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>Footprint</span>
           </h1>
           <p style={{ color: "#475569", fontSize: "18px", fontWeight: 500, maxWidth: "600px", margin: "0 auto", lineHeight: 1.6 }}>
             Motor de investigación profunda y análisis de sentimiento. <br/>Obtén una radiografía ejecutiva real para tu marca.
@@ -1314,8 +1306,7 @@ export default function App() {
         fontFamily: "'Inter', sans-serif", fontWeight: 600, borderTop: "1px solid rgba(226,232,240,0.8)",
         background: "rgba(255,255,255,0.5)"
       }}>
-        R'EVOLUTION<span style={{ color: "#10b981" }}>LAB</span> · BRAND INTELLIGENCE ENGINE<br/>
-        <span style={{ opacity: 0.6 }}>POWERED BY GEMINI AI</span>
+        2026 - R'Evolution Group TM - Powered by MktLab
       </footer>
 
     </div>

@@ -630,8 +630,9 @@ VARIABLES DE BÚSQUEDA Y CONTEXTO:
 
 INSTRUCCIONES ESPECÍFICAS:
 1. Usa el nombre de la marca, la URL oficial, y las palabras clave adicionales o variantes para buscar en profundidad las categorías requeridas por el marco estratégico.
-2. Extrae hallazgos y organizalos basándote con máxima rigurosidad en las reglas de calidad y verificación de links.
-3. Completa TODO el análisis y genera la radiografía ejecutiva.
+2. Para el análisis de Reddit, es OBLIGATORIO realizar un crawling/búsqueda profunda de hilos que contengan EXACTAMENTE la palabra definida en [NOMBRE_DE_MARCA].
+3. Extrae hallazgos y organizalos basándote con máxima rigurosidad en las reglas de calidad y verificación de links.
+4. Completa TODO el análisis y genera la radiografía ejecutiva.
 
 Devuelve únicamente el JSON válido estructurado como se solicitó.`;
 }

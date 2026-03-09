@@ -24,7 +24,12 @@ export default async function handler(req, res) {
         contents: body.contents,
         generationConfig: {
           responseMimeType: "application/json",
-        }
+        },
+        tools: [
+          {
+            googleSearch: {}
+          }
+        ]
       })
     });
 

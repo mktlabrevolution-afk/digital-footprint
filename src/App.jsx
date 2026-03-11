@@ -539,10 +539,8 @@ L - Limits (Límites)
 
 - No inventes hallazgos ni inferencias no soportadas.
 - No incluyas datos sin alta confianza.
-- No incluyas ninguna URL no verificada, caída, vacía, borrada o irrelevante.
-- Todo enlace citado debe haber sido validado como activo y con contenido al día del análisis.
-- Si el contenido ya no está disponible, no lo presentes como evidencia confirmada.
-- Si una URL no puede verificarse con alta confianza, exclúyela del dashboard principal.
+- Todo enlace citado DEBE haber sido validado como activo y con contenido al día del análisis mediante tu motor de Google Search.
+- Si una URL lleva a un 404, error de servidor o está vacía, DEBES etiquetarla OBLIGATORIAMENTE con el \`verification_status\` "Inactivo" o "vacío". 
 - Si la atribución a la marca es incierta, dilo explícitamente.
 - Prioriza fuentes primarias y enlaces directos.
 - Cuando uses una fuente agregada o secundaria, identifícalo.
@@ -578,8 +576,8 @@ El JSON debe seguir EXACTAMENTE esta estructura:
       "findings": [
         {
           "platform": "nombre plataforma",
-          "url": "URL directa y verificable",
-          "verification_status": "Activo y validado | Activo pero parcialmente verificable | No verificable | Excluido",
+          "url": "URL directa e investigada",
+          "verification_status": "Activo y validado | Inactivo (404/vacío) | Activo pero parcialmente verificable | No verificable | Excluido",
           "access_type": "Público | Parcialmente restringido | Requiere login | Inestable",
           "footprint_type": "propia | ganada | compartida | UGC | reputacional | regulatoria | académica | técnica",
           "title": "título breve del hallazgo",
@@ -715,10 +713,16 @@ function FindingCard({ finding }) {
     if (!status) return null;
     const lower = status.toLowerCase();
     if (lower.includes("validado")) return "✅";
+    if (lower.includes("inactivo") || lower.includes("vacío") || lower.includes("404") || lower.includes("vacio")) return "⚠️";
     if (lower.includes("parcial")) return "⚠️";
     if (lower.includes("excluido") || lower.includes("no verificable")) return "❌";
     return "❓";
   };
+  
+  const isDeadLink = finding.verification_status?.toLowerCase().includes("inactivo") || 
+                     finding.verification_status?.toLowerCase().includes("vacío") ||
+                     finding.verification_status?.toLowerCase().includes("vacio") ||
+                     finding.verification_status?.toLowerCase().includes("404");
 
   return (
     <div style={{
@@ -759,10 +763,12 @@ function FindingCard({ finding }) {
             {finding.verification_status && (
               <span style={{
                 fontSize: "11px", padding: "3px 8px", borderRadius: "100px",
-                background: "rgba(59,130,246,0.1)", color: "#3b82f6",
-                fontWeight: 600, fontFamily: "'Inter', sans-serif"
+                background: isDeadLink ? "rgba(239,68,68,0.1)" : "rgba(59,130,246,0.1)", 
+                color: isDeadLink ? "#ef4444" : "#3b82f6",
+                fontWeight: 600, fontFamily: "'Inter', sans-serif",
+                border: isDeadLink ? "1px solid rgba(239,68,68,0.2)" : "none"
               }} title={finding.verification_status}>
-                {getVerificationIcon(finding.verification_status)} LINK
+                {getVerificationIcon(finding.verification_status)} {isDeadLink ? "LINK INACTIVO / 404" : "LINK VALIDADO"}
               </span>
             )}
             {finding.access_type && (
@@ -782,16 +788,26 @@ function FindingCard({ finding }) {
           <p style={{ margin: "0 0 12px", fontSize: "14px", color: "#475569", lineHeight: 1.6 }}>
             {finding.description}
           </p>
-          <a href={finding.url} target="_blank" rel="noopener noreferrer" style={{
-            fontSize: "13px", color: "#059669", textDecoration: "none",
-            fontFamily: "'Inter', sans-serif", fontWeight: 600,
-            display: "inline-flex", alignItems: "center", gap: "4px"
-          }}
-            onMouseEnter={e => e.target.style.textDecoration = "underline"}
-            onMouseLeave={e => e.target.style.textDecoration = "none"}
-          >
-            Ver fuente ↗
-          </a>
+          {isDeadLink ? (
+            <span style={{
+              fontSize: "13px", color: "#ef4444", textDecoration: "line-through",
+              fontFamily: "'Inter', sans-serif", fontWeight: 600, opacity: 0.6,
+              display: "inline-flex", alignItems: "center", gap: "4px", cursor: "not-allowed"
+            }}>
+              Enlace roto o vacío ⊘
+            </span>
+          ) : (
+            <a href={finding.url} target="_blank" rel="noopener noreferrer" style={{
+              fontSize: "13px", color: "#059669", textDecoration: "none",
+              fontFamily: "'Inter', sans-serif", fontWeight: 600,
+              display: "inline-flex", alignItems: "center", gap: "4px"
+            }}
+              onMouseEnter={e => e.target.style.textDecoration = "underline"}
+              onMouseLeave={e => e.target.style.textDecoration = "none"}
+            >
+              Ver fuente ↗
+            </a>
+          )}
         </div>
         {finding.date && (
           <span style={{

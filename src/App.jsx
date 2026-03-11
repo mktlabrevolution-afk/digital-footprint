@@ -895,9 +895,46 @@ export default function App() {
     setLoading(true);
     setError(null);
     setResult(null);
-    setStatusMsg("Fase 1/4: Explorando Ecosistema Oficial y Laboral");
+
+    let cloudflareContext = "";
 
     try {
+      // FASE 0: Cloudflare Crawler
+      setStatusMsg("Fase 0/4: Rastreando Ecosistema Web Oficial (puede tardar unos minutos)...");
+      try {
+        const crawlRes = await fetch("/api/crawl", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ url })
+        });
+        
+        const crawlData = await crawlRes.json();
+        if (crawlRes.ok && crawlData.result?.jobId) {
+          const jobId = crawlData.result.jobId;
+          
+          // Polling hasta que termine
+          let isDone = false;
+          let attempts = 0;
+          while (!isDone && attempts < 30) { // Max ~2.5 mins
+            await new Promise(r => setTimeout(r, 5000));
+            attempts++;
+            const statusRes = await fetch(`/api/crawl?jobId=${jobId}`);
+            const statusData = await statusRes.json();
+            
+            if (statusData.result?.status === "success" || statusData.result?.status === "completed") {
+              isDone = true;
+              // Limitamos a 50k caracteres para no ahogar a Gemini, Cloudflare puede devolver MBs
+              cloudflareContext = (statusData.result?.markdown || "").substring(0, 50000);
+            } else if (statusData.result?.status === "failed" || statusData.result?.status === "error") {
+              isDone = true;
+              console.warn("Cloudflare Crawl Failed:", statusData);
+            }
+          }
+        }
+      } catch (cfErr) {
+        console.warn("Error en Fase 0 (Cloudflare falló, omitiendo):", cfErr);
+      }
+
       const callApi = async (sysInst, userPrompt) => {
         const payload = {
           model: "gemini-2.5-pro",
@@ -919,10 +956,17 @@ export default function App() {
       const baseText = `Actúa como analista de inteligencia de la marca ${brandName || url}. Usa tu herramienta de Google Search Grounding de forma muy exhaustiva para verificar cada rincón de internet. Devuelve únicamente un reporte en texto plano detallado en Markdown (NO JSON). Comprueba meticulosamente que cada URL que reportes esté activa y funcional hoy.`;
 
       // FASE 1
+      setStatusMsg("Fase 1/4: Explorando Ecosistema Oficial y Laboral...");
       const p1 = `${baseText}
 Enfócate EXCLUSIVAMENTE en la huella CORPORATIVA, OFICIAL y LABORAL.
 1. Identifica sitios oficiales que nazcan de ${url}, subdominios, dependencias, reportes PDF y ecosistema interno.
-2. Identifica la percepción laboral: busca activamente en plataformas de empleo (Glassdoor, Indeed, Computrabajo, LinkedIn) reportando ventajas y desventajas. Agrega todas las URLs de pruebas encontradas.`;
+2. Identifica la percepción laboral: busca activamente en plataformas de empleo (Glassdoor, Indeed, Computrabajo, LinkedIn) reportando ventajas y desventajas. Agrega todas las URLs de pruebas encontradas.
+
+CONTEXTO ADICIONAL (Rastreo Estructural de la web propia proveído por Cloudflare):
+---
+${cloudflareContext ? cloudflareContext : "No se pudo recuperar rastreo estructural. Procede con Google Grounding normal."}
+---
+`;
       const res1 = await callApi(null, p1);
 
       // FASE 2

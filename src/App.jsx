@@ -931,6 +931,10 @@ export default function App() {
       }
 
       let clean = textBlocks.replace(/```json\n?|```/g, "").trim();
+      
+      // Eliminar posibles citas del tipo [1], [2, 3] que inyecta Google Search Grounding
+      clean = clean.replace(/\[\s*\d+(?:\s*,\s*\d+)*\s*\]/g, "");
+
       const firstBrace = clean.indexOf("{");
       const lastBrace = clean.lastIndexOf("}");
       if (firstBrace !== -1 && lastBrace !== -1 && lastBrace >= firstBrace) {
@@ -942,7 +946,8 @@ export default function App() {
         parsed = JSON.parse(clean);
       } catch (e) {
         console.error("Failed to parse JSON:", clean);
-        throw new Error("El modelo no devolvió un JSON válido. Revisa el system prompt.");
+        console.error("Parse Error Details:", e.message);
+        throw new Error(`El modelo falló al estructurar el reporte. Detalles: ${e.message}. Texto devuelto: ${clean.substring(0, 150)}... Reintenta en unos instantes.`);
       }
       
       setResult(parsed);

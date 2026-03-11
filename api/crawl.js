@@ -3,7 +3,7 @@ export default async function handler(req, res) {
   const apiToken = process.env.CLOUDFLARE_API_TOKEN;
 
   if (!accountId || !apiToken) {
-    return res.status(500).json({ error: { message: "Faltan credenciales de Cloudflare en Vercel." } });
+    return res.status(401).json({ error: { message: "Faltan credenciales de Cloudflare en Vercel." } });
   }
 
   // Si recibimos GET, verificamos el estatus de un Job ID.

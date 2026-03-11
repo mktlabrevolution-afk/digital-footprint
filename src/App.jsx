@@ -830,7 +830,7 @@ function CategorySection({ category }) {
         </span>
         <span style={{ color: "#94a3b8", fontSize: "12px", marginLeft: "4px" }}>{open ? "▲" : "▼"}</span>
       </button>
-      {open && category.findings?.length > 0 && (
+      {open && Array.isArray(category.findings) && category.findings.length > 0 && (
         <div style={{ marginTop: "16px", paddingLeft: "8px", borderLeft: "2px dashed rgba(203,213,225,0.5)", marginLeft: "24px" }}>
           {category.findings.map((f, i) => <FindingCard key={i} finding={f} />)}
         </div>
@@ -930,7 +930,12 @@ export default function App() {
           throw new Error("La API no devolvió contenido de texto.");
       }
 
-      const clean = textBlocks.replace(/```json\n?|```/g, "").trim();
+      let clean = textBlocks.replace(/```json\n?|```/g, "").trim();
+      const firstBrace = clean.indexOf("{");
+      const lastBrace = clean.lastIndexOf("}");
+      if (firstBrace !== -1 && lastBrace !== -1 && lastBrace >= firstBrace) {
+        clean = clean.substring(firstBrace, lastBrace + 1);
+      }
       
       let parsed;
       try {
@@ -1244,7 +1249,7 @@ export default function App() {
                 DESGLOSE DE SUPERFICIES
                 <span style={{ flex: 1, height: "2px", background: "linear-gradient(90deg, #cbd5e1, transparent)" }}></span>
               </div>
-              {result.categories?.map((cat, i) => (
+              {Array.isArray(result.categories) && result.categories.map((cat, i) => (
                 <CategorySection key={i} category={cat} />
               ))}
             </div>
@@ -1262,7 +1267,7 @@ export default function App() {
                   <h3 style={{ margin: 0, fontFamily: "'Outfit', sans-serif", fontSize: "20px", fontWeight: 800, color: "#0f172a" }}>Oportunidades Estratégicas</h3>
                 </div>
                 <ul style={{ margin: 0, padding: 0, listStyle: "none" }}>
-                  {result.strategic_recommendations?.map((rec, i) => (
+                  {Array.isArray(result.strategic_recommendations) && result.strategic_recommendations.map((rec, i) => (
                     <li key={i} style={{
                       position: "relative", paddingLeft: "24px", marginBottom: "16px",
                       fontSize: "15px", color: "#334155", lineHeight: 1.5, fontWeight: 500
@@ -1285,7 +1290,7 @@ export default function App() {
                   <h3 style={{ margin: 0, fontFamily: "'Outfit', sans-serif", fontSize: "20px", fontWeight: 800, color: "#0f172a" }}>Puntos Ciegos & Riesgos</h3>
                 </div>
                 <ul style={{ margin: 0, paddingLeft: "20px", color: "#475569", fontSize: "14px", lineHeight: 1.6 }}>
-                  {result.blind_spots?.map((bs, i) => (
+                  {Array.isArray(result.blind_spots) && result.blind_spots.map((bs, i) => (
                     <li key={i} style={{ marginBottom: "12px", fontWeight: 500 }}>{bs}</li>
                   ))}
                 </ul>

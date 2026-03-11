@@ -1309,11 +1309,11 @@ Combina esta evidencia con tus reglas y devuelve el JSON definitivo.`;
                     </div>
                   </div>
                 </div>
-                {result.qa_verification.restricted_platforms_noted?.length > 0 && (
+                {Array.isArray(result.qa_verification.restricted_platforms_noted) && result.qa_verification.restricted_platforms_noted.length > 0 && (
                   <div style={{ maxWidth: "350px", background: "rgba(248,250,252,0.8)", padding: "16px 20px", borderRadius: "12px", border: "1px dashed rgba(203,213,225,0.8)" }}>
                     <div style={{ fontSize: "11px", fontWeight: 700, color: "#64748b", marginBottom: "8px" }}>PLATAFORMAS CON ACCESO RESTRINGIDO:</div>
                     <div style={{ fontSize: "13px", color: "#334155", fontWeight: 500 }}>
-                      {result.qa_verification.restricted_platforms_noted.join(", ")}
+                      {result.qa_verification.restricted_platforms_noted.map(item => typeof item === 'object' ? JSON.stringify(item) : item).join(", ")}
                     </div>
                   </div>
                 )}

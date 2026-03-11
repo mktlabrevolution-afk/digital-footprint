@@ -869,28 +869,10 @@ export default function App() {
 
   useEffect(() => {
     if (!loading) return;
-    const msgs = [
-      "Iniciando rastreo de huella digital",
-      "Explorando foros y comunidades",
-      "Analizando sitios de reseñas y empleo",
-      "Escaneando bases de datos y directorios",
-      "Rastreando contenido generado por usuarios",
-      "Procesando menciones en medios digitales",
-      "Identificando presencia en redes sociales",
-      "Buscando en repositorios y documentos",
-      "Analizando rankings y certificaciones",
-      "Calculando distribución de sentimiento",
-      "Sintetizando hallazgos para el dashboard",
-    ];
-    let i = 0;
-    const interval = setInterval(() => {
-      setStatusMsg(msgs[i % msgs.length]);
-      i++;
-    }, 3500);
     const dotsInterval = setInterval(() => {
       setLoadingDots(d => d.length >= 3 ? "" : d + ".");
     }, 400);
-    return () => { clearInterval(interval); clearInterval(dotsInterval); };
+    return () => { clearInterval(dotsInterval); };
   }, [loading]);
 
   const addKeyword = () => {
@@ -913,40 +895,71 @@ export default function App() {
     setLoading(true);
     setError(null);
     setResult(null);
-    setStatusMsg("Iniciando rastreo de huella digital");
+    setStatusMsg("Fase 1/4: Explorando Ecosistema Oficial y Laboral");
 
     try {
-      // Usar nuestro endpoint seguro de Vercel en lugar de llamar directamente a la API
-      const response = await fetch("/api/research", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
+      const callApi = async (sysInst, userPrompt) => {
+        const payload = {
           model: "gemini-2.5-pro",
-          systemInstruction: {
-            parts: [{ text: SYSTEM_PROMPT }]
-          },
-          contents: [
-            {
-              role: "user",
-              parts: [{ text: buildUserPrompt(url, keywords, brandName) }]
-            }
-          ]
-        })
-      });
+          contents: [{ role: "user", parts: [{ text: userPrompt }] }]
+        };
+        if (sysInst) {
+          payload.systemInstruction = { parts: [{ text: sysInst }] };
+        }
+        const response = await fetch("/api/research", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error?.message || `Error ${response.status}`);
+        return data.candidates?.[0]?.content?.parts?.[0]?.text || "";
+      };
 
-      const data = await response.json();
-      
-      if (!response.ok) {
-        throw new Error(data.error?.message || `Error ${response.status}`);
+      const baseText = `Actúa como analista de inteligencia de la marca ${brandName || url}. Usa tu herramienta de Google Search Grounding de forma muy exhaustiva para verificar cada rincón de internet. Devuelve únicamente un reporte en texto plano detallado en Markdown (NO JSON). Comprueba meticulosamente que cada URL que reportes esté activa y funcional hoy.`;
+
+      // FASE 1
+      const p1 = `${baseText}
+Enfócate EXCLUSIVAMENTE en la huella CORPORATIVA, OFICIAL y LABORAL.
+1. Identifica sitios oficiales que nazcan de ${url}, subdominios, dependencias, reportes PDF y ecosistema interno.
+2. Identifica la percepción laboral: busca activamente en plataformas de empleo (Glassdoor, Indeed, Computrabajo, LinkedIn) reportando ventajas y desventajas. Agrega todas las URLs de pruebas encontradas.`;
+      const res1 = await callApi(null, p1);
+
+      // FASE 2
+      setStatusMsg("Fase 2/4: Escaneando Reddit, Foros y Comunidades");
+      const p2 = `${baseText}
+Enfócate EXCLUSIVAMENTE en la huella en COMUNIDADES, REDES SOCIALES y FOROS. Usa las variaciones de la marca: ${keywords.join(", ") || brandName || url}.
+1. Haz una búsqueda obligatoria en Reddit (ej. "reddit ${brandName || url}"). Extrae qué se está discutiendo recientemente.
+2. Identifica foros profesionales, estudiantiles o temáticos, Quora, Medium o blogs donde se analicen sus servicios o productos.`;
+      const res2 = await callApi(null, p2);
+
+      // FASE 3
+      setStatusMsg("Fase 3/4: Rastreando Medios, Prensa y Reseñas");
+      const p3 = `${baseText}
+Enfócate EXCLUSIVAMENTE en la huella EXTENSA EN MEDIOS, QUEJAS y ECOSISTEMA CON TERCEROS.
+1. Busca en medios de comunicación, blogs de noticias, prensa y portales de PR.
+2. Sitios de quejas públicas de consumidores (Reclamos, TuQuejaSuma, Google Reviews).
+3. Ecosistema de control y autoridad: Menciones por entidades gubernamentales, rankings técnicos, y listas de calidad.`;
+      const res3 = await callApi(null, p3);
+
+      // FASE 4
+      setStatusMsg("Fase 4/4: Consolidando Radiografía Ejecutiva");
+      const ctx = `\n\n--- INSUMOS PREVIOS RECOPILADOS POR TU CRAWLER ---\n
+Utiliza obligatoriamente todo el material listado a continuación como tu fuente primaria para construir el JSON final, no omitas los links encontrados:
+
+[FASE 1: CORPORATIVA Y LABORAL]\n${res1}\n
+[FASE 2: COMUNIDADES Y REDES]\n${res2}\n
+[FASE 3: MEDIOS Y RESEÑAS]\n${res3}\n
+Combina esta evidencia con tus reglas y devuelve el JSON definitivo.`;
+
+      const p4 = buildUserPrompt(url, keywords, brandName) + ctx;
+      const res4 = await callApi(SYSTEM_PROMPT, p4);
+
+      if (!res4) {
+          throw new Error("La API no devolvió contenido de texto en la fase final.");
       }
 
-      const textBlocks = data.candidates?.[0]?.content?.parts?.[0]?.text || "";
-
-      if (!textBlocks) {
-          throw new Error("La API no devolvió contenido de texto.");
-      }
-
-      let clean = textBlocks.replace(/```json\n?|```/g, "").trim();
+      let clean = res4.replace(/```json\n?|```/g, "").trim();
       
       // Eliminar posibles citas del tipo [1], [2, 3] que inyecta Google Search Grounding
       clean = clean.replace(/\[\s*\d+(?:\s*,\s*\d+)*\s*\]/g, "");
